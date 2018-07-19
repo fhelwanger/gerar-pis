@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>gerar-pis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+  <div>
+    <label for="quantos">Quantos:</label>
+    <input type="text" id="quantos" />
+    <input type="button" id="gerar" value="Gerar" />
+  </div>
+
+  <hr />
+
+  <label for="resultado">Resultado:</label>
+  <div>
+    <textarea readonly id="resultado" style="width: 200px; height: 500px;"></textarea>
+  </div>
+
+  <script>
+    const inputQuantos = document.getElementById('quantos');
+    const inputResultado = document.getElementById('resultado');
+    const buttonGerar = document.getElementById('gerar');
+
+    buttonGerar.addEventListener('click', () => {
+      const quantos = Number(inputQuantos.value);
+
+      if (isNaN(quantos) || quantos <= 0) {
+        alert('Quantidade nada a ver');
+        return;
+      }
+
+      const listaPis = gerarPis(quantos);
+
+      inputResultado.value = listaPis.reduce((acc, x) => acc + '\n' + x);
+    });
+
+    function gerarPis(quantos) {
+      return Array.from({ length: quantos }, (x, i) => (i + 1).toString())
+        .map(pis => calcularDigito(pis));
+    }
+
+    function calcularDigito(pis) {
+      pis = pis.padStart(10, '0');
+
+      const pesos = '3298765432';
+
+      const soma = pis
+        .split('')
+        .map((d, i) => Number(d) * Number(pesos[i]))
+        .reduce((acc, x) => acc + x);
+
+      let digito = 11 - (soma % 11);
+
+      if (digito > 9) {
+        digito = 0;
+      }
+
+      return pis + digito;
+    }
+  </script>
+</body>
+
+</html>
